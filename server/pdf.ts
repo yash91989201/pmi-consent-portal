@@ -35,7 +35,7 @@ const PMI_BANK_DETAILS = {
   ifscCode: 'UTIB0001398',
 };
 
-const PMI_UPI_ID = '7460070899@ptaxis';
+const PMI_UPI_ID = 'pmiindia452-1@okaxis';
 
 const CONSENT_ITEMS = [
   'I have been informed about the nature, scope, and charges of the services provided by PMI Services and have no objection to making payment for the same.',

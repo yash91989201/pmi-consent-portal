@@ -11,7 +11,7 @@ const PMI_BANK_DETAILS = {
   ifscCode: 'UTIB0001398',
 };
 
-const PMI_UPI_ID = '7460070899@ptaxis';
+const PMI_UPI_ID = 'pmiindia452-1@okaxis';
 
 export function ConsentFormView({ formData }: { formData: ConsentFormDetail }) {
   return (
