@@ -141,10 +141,9 @@ export function FillForm() {
 
   // Full input className with the border/ring turning red on error.
   const fieldClass = (name: string, extra = '') =>
-    `${INPUT_BASE} ${extra} ${
-      fieldErrors[name]
-        ? 'border-red-400 focus:ring-2 focus:ring-red-500/60 focus:border-red-500'
-        : 'border-slate-300 focus:ring-2 focus:ring-seal/40 focus:border-seal'
+    `${INPUT_BASE} ${extra} ${fieldErrors[name]
+      ? 'border-red-400 focus:ring-2 focus:ring-red-500/60 focus:border-red-500'
+      : 'border-slate-300 focus:ring-2 focus:ring-seal/40 focus:border-seal'
     }`;
 
   // Small-caps document label shared by every field.
@@ -247,8 +246,8 @@ export function FillForm() {
             cropTarget.side === 'proof'
               ? 'Crop Payment Proof'
               : cropTarget.side === 'pan'
-              ? 'Crop PAN Card'
-              : `Crop Aadhaar Card (${cropTarget.side === 'front' ? 'Front' : 'Back'})`
+                ? 'Crop PAN Card'
+                : `Crop Aadhaar Card (${cropTarget.side === 'front' ? 'Front' : 'Back'})`
           }
           onCancel={() => setCropTarget(null)}
           onConfirm={handleCropConfirm}
@@ -278,7 +277,7 @@ export function FillForm() {
           <dl className="flex flex-wrap gap-x-6 gap-y-1.5 py-3.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-slate-400">
             <div className="flex gap-1.5"><dt className="text-slate-500">Form</dt><dd className="text-slate-200">PMI/CPA-01</dd></div>
             <div className="flex gap-1.5"><dt className="text-slate-500">Type</dt><dd className="text-slate-200">Deed of Consent</dd></div>
-            <div className="flex gap-1.5"><dt className="text-slate-500">Jurisdiction</dt><dd className="text-slate-200">Tikamgarh, M.P.</dd></div>
+            <div className="flex gap-1.5"><dt className="text-slate-500">Jurisdiction</dt><dd className="text-slate-200">Mumbai , Maharastra</dd></div>
           </dl>
         </header>
 
@@ -375,11 +374,10 @@ export function FillForm() {
               <div>
                 <label className={LABEL}>Mobile Number *</label>
                 <div
-                  className={`flex rounded-md border bg-white transition-shadow ${
-                    fieldErrors.mobileNumber
-                      ? 'border-red-400 focus-within:ring-2 focus-within:ring-red-500/60 focus-within:border-red-500'
-                      : 'border-slate-300 focus-within:ring-2 focus-within:ring-seal/40 focus-within:border-seal'
-                  }`}
+                  className={`flex rounded-md border bg-white transition-shadow ${fieldErrors.mobileNumber
+                    ? 'border-red-400 focus-within:ring-2 focus-within:ring-red-500/60 focus-within:border-red-500'
+                    : 'border-slate-300 focus-within:ring-2 focus-within:ring-seal/40 focus-within:border-seal'
+                    }`}
                 >
                   <select
                     name="countryCode"
