@@ -28,14 +28,42 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const UPI_QR_PATH = path.resolve(__dirname, 'assets/upi-qr.jpeg');
 const brandLogoPath = path.join(__dirname, '..', 'assets', 'logo.png');
 
-const PMI_BANK_DETAILS = {
-  bankName: 'AXIS BANK',
-  accountHolderName: 'PMI SERVICES ENTERPRISES',
-  accountNumber: '926020017030914',
-  ifscCode: 'UTIB0001398',
+type PdfBankAccount = {
+  bankName: string;
+  accountHolderName: string;
+  accountNumber: string;
+  ifscCode: string;
+  branchName?: string;
+  upiId?: string;
+  qrPath: string;
 };
 
-const PMI_UPI_ID = 'pmiindia452-1@okaxis';
+const BANK_ACCOUNTS: PdfBankAccount[] = [
+  {
+    bankName: 'AXIS BANK',
+    accountHolderName: 'PMI SERVICES ENTERPRISES',
+    accountNumber: '926020017030914',
+    ifscCode: 'UTIB0001398',
+    upiId: 'pmiindia452-1@okaxis',
+    qrPath: UPI_QR_PATH,
+  },
+  {
+    bankName: 'Central Bank of India',
+    accountHolderName: 'Kaptan Singh Bunkar (Account / Finance Manager)',
+    accountNumber: '5994923883',
+    ifscCode: 'CBIN0284853',
+    branchName: 'Mahroni',
+    qrPath: path.join(__dirname, '..', 'assets', 'qr-1.png'),
+  },
+  {
+    bankName: 'Central Bank of India',
+    accountHolderName: 'Vikesh Rawat (Account / Finance Manager)',
+    accountNumber: '4156485432',
+    ifscCode: 'CBIN0280601',
+    branchName: 'Mumbai Central',
+    qrPath: path.join(__dirname, '..', 'assets', 'qr-2.png'),
+  },
+];
 
 const CONSENT_ITEMS = [
   'I have been informed about the nature, scope, and charges of the services provided by PMI Services and have no objection to making payment for the same.',
@@ -275,50 +303,58 @@ export function buildFormPdf(
     doc.y = proofY + rendered + 10;
   }
 
-  // Bank account details + UPI QR, side by side.
-  if (doc.y + 200 > doc.page.height - doc.page.margins.bottom) {
-    doc.addPage();
-  }
+  // Bank account details + UPI QR, one row per account.
   sectionTitle(doc, 'Bank Account Details');
-  const bankStartY = doc.y;
-  const qrColWidth = 140;
+  const qrColWidth = 130;
   const bankColWidth = width - qrColWidth - 20;
-
-  doc.font('Helvetica-Bold').fontSize(10).fillColor('#0f172a');
-  doc.text('PMI Services', x, bankStartY, { width: bankColWidth });
-  doc.moveDown(0.4);
-  doc.font('Helvetica').fontSize(9.5).fillColor('#334155');
-  const bankLines: [string, string][] = [
-    ['Bank Name', PMI_BANK_DETAILS.bankName],
-    ['Account Holder Name', PMI_BANK_DETAILS.accountHolderName],
-    ['Account Number', PMI_BANK_DETAILS.accountNumber],
-    ['IFSC Code', PMI_BANK_DETAILS.ifscCode],
-  ];
-  for (const [label, value] of bankLines) {
-    doc.text(`${label}: `, x, doc.y, { continued: true, width: bankColWidth });
-    doc.font('Helvetica-Bold').text(value, { width: bankColWidth });
-    doc.font('Helvetica');
-  }
-  const bankBlockBottom = doc.y;
-
   const qrX = x + width - qrColWidth;
-  let qrBottom = bankStartY;
-  if (fs.existsSync(UPI_QR_PATH)) {
-    try {
-      const qrBuffer = fs.readFileSync(UPI_QR_PATH);
-      doc.image(qrBuffer, qrX, bankStartY, { fit: [qrColWidth, qrColWidth] });
-      qrBottom = bankStartY + qrColWidth;
-    } catch {
-      // Fall through — still show the UPI ID as text below.
-    }
-  }
-  doc.font('Helvetica-Bold').fontSize(9).fillColor('#0f172a');
-  doc.text(PMI_UPI_ID, qrX, qrBottom + 6, { width: qrColWidth, align: 'center' });
-  doc.font('Helvetica').fontSize(7.5).fillColor('#64748b');
-  doc.text('Scan with any UPI app', qrX, doc.y + 2, { width: qrColWidth, align: 'center' });
 
-  doc.x = x;
-  doc.y = Math.max(bankBlockBottom, doc.y) + 8;
+  for (const account of BANK_ACCOUNTS) {
+    if (doc.y + qrColWidth + 90 > doc.page.height - doc.page.margins.bottom) {
+      doc.addPage();
+    }
+    const bankStartY = doc.y;
+
+    doc.font('Helvetica-Bold').fontSize(10).fillColor('#0f172a');
+    doc.text('PMI Services', x, bankStartY, { width: bankColWidth });
+    doc.moveDown(0.4);
+    doc.font('Helvetica').fontSize(9.5).fillColor('#334155');
+    const bankLines: [string, string][] = [
+      ['Bank Name', account.bankName],
+      ['Account Holder Name', account.accountHolderName],
+      ['Account Number', account.accountNumber],
+      ['IFSC Code', account.ifscCode],
+    ];
+    if (account.branchName) bankLines.push(['Branch Name', account.branchName]);
+    for (const [label, value] of bankLines) {
+      doc.text(`${label}: `, x, doc.y, { continued: true, width: bankColWidth });
+      doc.font('Helvetica-Bold').text(value, { width: bankColWidth });
+      doc.font('Helvetica');
+    }
+    const bankBlockBottom = doc.y;
+
+    let qrBottom = bankStartY;
+    if (fs.existsSync(account.qrPath)) {
+      try {
+        const qrBuffer = fs.readFileSync(account.qrPath);
+        doc.image(qrBuffer, qrX, bankStartY, { fit: [qrColWidth, qrColWidth] });
+        qrBottom = bankStartY + qrColWidth;
+      } catch {
+        // Fall through — still show the caption below.
+      }
+    }
+    let captionY = qrBottom + 6;
+    if (account.upiId) {
+      doc.font('Helvetica-Bold').fontSize(9).fillColor('#0f172a');
+      doc.text(account.upiId, qrX, captionY, { width: qrColWidth, align: 'center' });
+      captionY = doc.y + 2;
+    }
+    doc.font('Helvetica').fontSize(7.5).fillColor('#64748b');
+    doc.text('Scan with any UPI app', qrX, captionY, { width: qrColWidth, align: 'center' });
+
+    doc.x = x;
+    doc.y = Math.max(bankBlockBottom, doc.y) + 14;
+  }
 
   // Customer declaration + signature
   if (doc.y + 240 > doc.page.height - doc.page.margins.bottom) {

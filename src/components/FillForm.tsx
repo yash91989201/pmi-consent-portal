@@ -7,16 +7,7 @@ import { submitForm } from '../api';
 import { errorMessage } from '../errors';
 import { useDraftStore, isDraftDirty } from '../store/draftStore';
 import { validateForm, FIELD_ORDER, COUNTRIES, type FieldErrors } from '../validation';
-import upiQr from '../assets/upi-qr.jpeg';
-
-const PMI_BANK_DETAILS = {
-  bankName: 'AXIS BANK',
-  accountHolderName: 'PMI SERVICES ENTERPRISES',
-  accountNumber: '926020017030914',
-  ifscCode: 'UTIB0001398',
-};
-
-const PMI_UPI_ID = 'pmiindia452-1@okaxis';
+import { BANK_ACCOUNTS } from '../bankDetails';
 
 // Shared input styling; border/ring swaps to red when the field has an error.
 const INPUT_BASE =
@@ -638,43 +629,55 @@ export function FillForm() {
 
           {/* Bank Account Details section — informational, not user-editable */}
           <section>
-            <SectionHeader numeral="IV" title="Bank Account Details" note="Remit payment to the account below, or scan the UPI QR code" />
+            <SectionHeader numeral="IV" title="Bank Account Details" note="Remit payment to any account below, or scan the UPI QR code" />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="rounded-md border border-rule bg-ink/[0.02] p-5 sm:p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Landmark className="w-4 h-4 text-seal" />
-                  <h4 className="font-display text-base font-semibold text-ink">PMI Services — Bank Details</h4>
-                </div>
-                <dl className="space-y-3 text-sm">
-                  <div>
-                    <dt className={LABEL}>Bank Name</dt>
-                    <dd className="text-ink font-medium">{PMI_BANK_DETAILS.bankName}</dd>
+            <div className="space-y-6">
+              {BANK_ACCOUNTS.map((account) => (
+                <div key={account.accountNumber} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="rounded-md border border-rule bg-ink/[0.02] p-5 sm:p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Landmark className="w-4 h-4 text-seal" />
+                      <h4 className="font-display text-base font-semibold text-ink">PMI Services — Bank Details</h4>
+                    </div>
+                    <dl className="space-y-3 text-sm">
+                      <div>
+                        <dt className={LABEL}>Bank Name</dt>
+                        <dd className="text-ink font-medium">{account.bankName}</dd>
+                      </div>
+                      <div>
+                        <dt className={LABEL}>Account Holder Name</dt>
+                        <dd className="text-ink font-medium">{account.accountHolderName}</dd>
+                      </div>
+                      <div>
+                        <dt className={LABEL}>Account Number</dt>
+                        <dd className="text-ink font-mono font-semibold">{account.accountNumber}</dd>
+                      </div>
+                      <div>
+                        <dt className={LABEL}>IFSC Code</dt>
+                        <dd className="text-ink font-mono font-semibold">{account.ifscCode}</dd>
+                      </div>
+                      {account.branchName && (
+                        <div>
+                          <dt className={LABEL}>Branch Name</dt>
+                          <dd className="text-ink font-medium">{account.branchName}</dd>
+                        </div>
+                      )}
+                    </dl>
                   </div>
-                  <div>
-                    <dt className={LABEL}>Account Holder Name</dt>
-                    <dd className="text-ink font-medium">{PMI_BANK_DETAILS.accountHolderName}</dd>
-                  </div>
-                  <div>
-                    <dt className={LABEL}>Account Number</dt>
-                    <dd className="text-ink font-mono font-semibold">{PMI_BANK_DETAILS.accountNumber}</dd>
-                  </div>
-                  <div>
-                    <dt className={LABEL}>IFSC Code</dt>
-                    <dd className="text-ink font-mono font-semibold">{PMI_BANK_DETAILS.ifscCode}</dd>
-                  </div>
-                </dl>
-              </div>
 
-              <div className="rounded-md border border-rule bg-ink/[0.02] p-5 sm:p-6 flex flex-col items-center text-center">
-                <div className="flex items-center gap-2 mb-4 self-start">
-                  <QrCode className="w-4 h-4 text-seal" />
-                  <h4 className="font-display text-base font-semibold text-ink">Scan to Pay via UPI</h4>
+                  <div className="rounded-md border border-rule bg-ink/[0.02] p-5 sm:p-6 flex flex-col items-center text-center">
+                    <div className="flex items-center gap-2 mb-4 self-start">
+                      <QrCode className="w-4 h-4 text-seal" />
+                      <h4 className="font-display text-base font-semibold text-ink">Scan to Pay via UPI</h4>
+                    </div>
+                    <img src={account.qr} alt={`${account.bankName} UPI QR code`} className="w-48 h-48 object-contain rounded-md border border-rule bg-white" />
+                    {account.upiId && (
+                      <p className="mt-3 text-sm text-ink font-mono font-semibold">{account.upiId}</p>
+                    )}
+                    <p className="text-xs text-ink-soft mt-1">Scan with any UPI app</p>
+                  </div>
                 </div>
-                <img src={upiQr} alt="PMI Services UPI QR code" className="w-48 h-48 object-contain rounded-md border border-rule bg-white" />
-                <p className="mt-3 text-sm text-ink font-mono font-semibold">{PMI_UPI_ID}</p>
-                <p className="text-xs text-ink-soft mt-1">Scan with any UPI app</p>
-              </div>
+              ))}
             </div>
           </section>
 
