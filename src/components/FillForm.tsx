@@ -671,9 +671,7 @@ export function FillForm() {
                       <h4 className="font-display text-base font-semibold text-ink">Scan to Pay via UPI</h4>
                     </div>
                     <img src={account.qr} alt={`${account.bankName} UPI QR code`} className="w-48 h-48 object-contain rounded-md border border-rule bg-white" />
-                    {account.upiId && (
-                      <p className="mt-3 text-sm text-ink font-mono font-semibold">{account.upiId}</p>
-                    )}
+                    <p className="mt-3 text-sm text-ink font-mono font-semibold">{account.upiId}</p>
                     <p className="text-xs text-ink-soft mt-1">Scan with any UPI app</p>
                   </div>
                 </div>

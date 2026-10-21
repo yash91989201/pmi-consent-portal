@@ -25,7 +25,6 @@ export interface PdfImage {
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const UPI_QR_PATH = path.resolve(__dirname, 'assets/upi-qr.jpeg');
 const brandLogoPath = path.join(__dirname, '..', 'assets', 'logo.png');
 
 type PdfBankAccount = {
@@ -34,25 +33,18 @@ type PdfBankAccount = {
   accountNumber: string;
   ifscCode: string;
   branchName?: string;
-  upiId?: string;
+  upiId: string;
   qrPath: string;
 };
 
 const BANK_ACCOUNTS: PdfBankAccount[] = [
-  {
-    bankName: 'AXIS BANK',
-    accountHolderName: 'PMI SERVICES ENTERPRISES',
-    accountNumber: '926020017030914',
-    ifscCode: 'UTIB0001398',
-    upiId: 'pmiindia452-1@okaxis',
-    qrPath: UPI_QR_PATH,
-  },
   {
     bankName: 'Central Bank of India',
     accountHolderName: 'Kaptan Singh Bunkar (Account / Finance Manager)',
     accountNumber: '5994923883',
     ifscCode: 'CBIN0284853',
     branchName: 'Mahroni',
+    upiId: 'pmiindia452-3@okhdfcbank',
     qrPath: path.join(__dirname, '..', 'assets', 'qr-1.png'),
   },
   {
@@ -61,6 +53,7 @@ const BANK_ACCOUNTS: PdfBankAccount[] = [
     accountNumber: '4156485432',
     ifscCode: 'CBIN0280601',
     branchName: 'Mumbai Central',
+    upiId: '8750218964-jc2b-3@axl',
     qrPath: path.join(__dirname, '..', 'assets', 'qr-2.png'),
   },
 ];
@@ -343,14 +336,11 @@ export function buildFormPdf(
         // Fall through — still show the caption below.
       }
     }
-    let captionY = qrBottom + 6;
-    if (account.upiId) {
-      doc.font('Helvetica-Bold').fontSize(9).fillColor('#0f172a');
-      doc.text(account.upiId, qrX, captionY, { width: qrColWidth, align: 'center' });
-      captionY = doc.y + 2;
-    }
+    const upiY = qrBottom + 6;
+    doc.font('Helvetica-Bold').fontSize(9).fillColor('#0f172a');
+    doc.text(account.upiId, qrX, upiY, { width: qrColWidth, align: 'center' });
     doc.font('Helvetica').fontSize(7.5).fillColor('#64748b');
-    doc.text('Scan with any UPI app', qrX, captionY, { width: qrColWidth, align: 'center' });
+    doc.text('Scan with any UPI app', qrX, doc.y + 2, { width: qrColWidth, align: 'center' });
 
     doc.x = x;
     doc.y = Math.max(bankBlockBottom, doc.y) + 14;

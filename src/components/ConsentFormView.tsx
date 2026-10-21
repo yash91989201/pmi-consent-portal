@@ -180,7 +180,8 @@ export function ConsentFormView({ formData }: { formData: ConsentFormDetail }) {
                     <span className="text-sm font-semibold text-gray-700">Scan to Pay via UPI</span>
                   </div>
                   <img src={account.qr} alt={`${account.bankName} UPI QR code`} className="w-40 h-40 object-contain border border-gray-300 rounded-lg" />
-                  {account.upiId && <p className="mt-3 text-sm font-bold text-gray-800">{account.upiId}</p>}
+                  <p className="mt-3 text-sm font-bold text-gray-800 font-mono">{account.upiId}</p>
+                  <p className="text-xs text-gray-600 mt-1">Scan with any UPI app</p>
                 </div>
               </div>
             ))}
