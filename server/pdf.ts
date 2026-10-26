@@ -40,15 +40,6 @@ type PdfBankAccount = {
 const BANK_ACCOUNTS: PdfBankAccount[] = [
   {
     bankName: 'Central Bank of India',
-    accountHolderName: 'Kaptan Singh Bunkar (Account / Finance Manager)',
-    accountNumber: '5994923883',
-    ifscCode: 'CBIN0284853',
-    branchName: 'Mahroni',
-    upiId: 'pmiindia452-3@okhdfcbank',
-    qrPath: path.join(__dirname, '..', 'assets', 'qr-1.png'),
-  },
-  {
-    bankName: 'Central Bank of India',
     accountHolderName: 'Vikesh Rawat (Account / Finance Manager)',
     accountNumber: '4156485432',
     ifscCode: 'CBIN0280601',
