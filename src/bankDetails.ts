@@ -13,7 +13,7 @@ export type BankAccount = {
 export const BANK_ACCOUNTS: BankAccount[] = [
   {
     bankName: 'Central Bank of India',
-    accountHolderName: 'Vikesh Rawat (Account / Finance Manager)',
+    accountHolderName: 'Kaptan Singh Bunkar (Account / Finance Manager)',
     accountNumber: '4156485432',
     ifscCode: 'CBIN0280601',
     branchName: 'Mumbai Central',
