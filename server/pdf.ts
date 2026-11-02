@@ -41,10 +41,10 @@ const BANK_ACCOUNTS: PdfBankAccount[] = [
   {
     bankName: 'Central Bank of India',
     accountHolderName: 'Kaptan Singh Bunkar (Account / Finance Manager)',
-    accountNumber: '4156485432',
-    ifscCode: 'CBIN0280601',
-    branchName: 'Mumbai Central',
-    upiId: '8750218964-jc2b-3@axl',
+    accountNumber: '5994923883',
+    ifscCode: 'CBIN0284853',
+    branchName: 'Mahroni',
+    upiId: 'pmindia452-3@okhdfcbank',
     qrPath: path.join(__dirname, '..', 'assets', 'qr-2.png'),
   },
 ];
