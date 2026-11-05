@@ -47,6 +47,15 @@ const BANK_ACCOUNTS: PdfBankAccount[] = [
     upiId: 'pmindia452-3@okhdfcbank',
     qrPath: path.join(__dirname, '..', 'assets', 'qr-2.png'),
   },
+  {
+    bankName: 'Central Bank of India',
+    accountHolderName: 'Vikesh Rawat (Account / Finance Manager)',
+    accountNumber: '4156485432',
+    ifscCode: 'CBIN0280601',
+    branchName: 'Mumbai Central',
+    upiId: '8750218964-jc2b-3@axl',
+    qrPath: path.join(__dirname, '..', 'assets', 'qr-vikesh.png'),
+  },
 ];
 
 const CONSENT_ITEMS = [
